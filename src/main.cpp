@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Display.hpp"
 
 #include <iostream>
 
@@ -8,6 +9,8 @@ int main()
     std::cout << "Hello World" << std::endl;
     Game g;
     g.hi("Arty");
-    std::cin >> n; 
+    std::cin >> n;
+    Display d;
+    d.show(); 
     return 0;
 }

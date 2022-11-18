@@ -6,7 +6,7 @@
 class Game
 {
     public:
-    void hi(std::string const& name) const;
+        void hi(std::string const& name) const;
 };
 
 #endif
