@@ -1,6 +1,6 @@
 project(gamejam-fall-2022)
 
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_CXX_STANDARD 17)
 if (MSVC)
@@ -11,7 +11,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-set(SOURCES src/main.cpp src/game.cpp)
+set(SOURCES src/main.cpp src/Game.cpp)
 include_directories(includes)
 
 add_executable(pewpew ${SOURCES})
