@@ -1,6 +1,3 @@
-#include "Game.hpp"
-#include "Display.hpp"
-
 //box2d tutorial!
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
@@ -61,9 +58,7 @@ int main()
     GroundTexture.loadFromFile("assets/ground.png");
     BoxTexture.loadFromFile("assets/box.png");
 
-    // b2Vec2 Gravity(0.f, 9.8f);
-    // b2World World(Gravity);
-    // CreateGround(World, 400.f, 500.f);
+    CreateGround(World, 400.f, 500.f);
 
     while (Window.isOpen())
     {

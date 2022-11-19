@@ -24,15 +24,19 @@ FetchContent_Declare(
  GIT_TAG v2.4.1
 )
 FetchContent_MakeAvailable(box2d)
-#add_subdirectory(${box2d_SOURCE_DIR}/Box2D ${box2d_BINARY_DIR})
 
 set(SOURCES 
-            src/main.cpp 
-            src/Game.cpp 
-            src/Display.cpp
-            )
+    pewpew/src/main.cpp 
+    pewpew/src/Game.cpp 
+    pewpew/src/Display.cpp
+)
 
 add_executable(pewpew ${SOURCES})
+
+target_include_directories(pewpew PRIVATE
+    pewpew/include 
+    ${box2d_SOURCE_DIR}/include
+)
 
 target_link_libraries(
     pewpew
@@ -40,4 +44,17 @@ target_link_libraries(
     box2d
 )
 
-target_include_directories(pewpew PRIVATE include ${box2d_SOURCE_DIR}/include)
+
+add_executable(boxbuilder boxbuilder/main.cpp)
+
+target_link_libraries(
+    boxbuilder
+    sfml-graphics
+    box2d
+)
+
+target_include_directories(boxbuilder PRIVATE ${box2d_SOURCE_DIR}/include)
+add_custom_command(TARGET boxbuilder POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${PROJECT_SOURCE_DIR}/boxbuilder/assets"
+            $<TARGET_FILE_DIR:boxbuilder>/assets)
