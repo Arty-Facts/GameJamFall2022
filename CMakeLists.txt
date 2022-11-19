@@ -3,47 +3,37 @@ project(gamejam-fall-2022)
 cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_CXX_STANDARD 17)
-if (MSVC)
-    # warning level 4 and all warnings as errors
-    add_compile_options(/W4 /WX)
-else()
-    # lots of warnings and all warnings as errors
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
-endif()
+set(CMAKE_CXX_STANDARD_REQUIRED true)
+
+include(FetchContent)
+
+set(BUILD_SHARED_LIBS OFF)
+FetchContent_Declare(
+ SFML
+ GIT_REPOSITORY https://github.com/SFML/SFML.git
+ GIT_TAG 2.5.1
+)
+FetchContent_MakeAvailable(SFML)
+
+set(BUILD_SHARED_LIBS OFF)
+FetchContent_Declare(
+ Box2D
+ GIT_REPOSITORY https://github.com/erincatto/box2d.git
+ GIT_TAG v2.4.1
+)
+FetchContent_MakeAvailable(Box2D)
 
 set(SOURCES 
             src/main.cpp 
             src/Game.cpp 
-            src/Display.cpp)
+            src/Display.cpp
+            )
 
 add_executable(pewpew ${SOURCES})
 
-target_include_directories(pewpew PRIVATE include SFML/include)
-target_link_directories(pewpew PRIVATE SFML/lib)
+target_link_libraries(
+    pewpew
+    sfml-graphics
+)
 
-if (MSVC)
-    add_custom_command(TARGET pewpew POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${PROJECT_SOURCE_DIR}/SFML/bin"
-            $<TARGET_FILE_DIR:pewpew>)
-    target_link_libraries(pewpew PRIVATE 
-                            sfml-graphics-d 
-                            sfml-system-d 
-                            sfml-window-d 
-                            openal32 
-                            sfml-main 
-                            sfml-audio-d 
-                            ogg 
-                            freetype 
-                            flac 
-                            vorbis 
-                            vorbisenc 
-                            vorbisfile)
-else()
-    target_link_libraries(pewpew PRIVATE 
-                            libsfml-graphics.so
-                            libsfml-system.so
-                            libsfml-window.so
-                            libsfml-audio.so
-                            )
-endif()
+target_include_directories(pewpew PRIVATE include)
