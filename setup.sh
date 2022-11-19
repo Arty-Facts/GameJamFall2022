@@ -14,13 +14,5 @@ sudo apt install -y\
                 libsdl2-dev\
                 unzip\
 
-### Check if SFML exist  ###
-if [ ! -d "SFML" ] 
-then
-    # Get SFML
-    wget -P /tmp https://github.com/SFML/SFML/archive/refs/heads/master.zip
-    unzip /tmp/master.zip
-    rm /tmp/master.zip
-    mv SFML-master SFML
-fi
+
 
