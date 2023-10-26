@@ -1,41 +1,60 @@
 #include <SFML/Graphics.hpp>
-#include "move.hpp"
+#include "Sensor.hpp"
+#include "Projectile.hpp"
+#include "SliderMenu.hpp"
+#include <vector>
 
 #define SPEED 100.0f
 
 int main() {
-    // Create a window with the size of 800x600 pixels
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Circle in the Middle");
+    // Create a window with the size of 900x600 pixels
+    sf::RenderWindow window(sf::VideoMode(900, 600), "Circle in the Middle");
 
-    // Create a circle with a radius of 50 pixels
-    sf::CircleShape circle(50);
+    // Create a sensor
+    Sensor sensor(10, window.getSize().x / 2, window.getSize().y / 2, SPEED);
+    SliderMenu sliderMenu(900, 600);
 
-    // Set the circle's color to green
-    circle.setFillColor(sf::Color::Green);
-
-    // Set the circle's position to the middle of the window
-    circle.setPosition(window.getSize().x / 2 - circle.getRadius(), 
-                       window.getSize().y / 2 - circle.getRadius());
-
+    std::vector<Projectile> projectiles;
     sf::Clock clock; // Create a clock to measure time elapsed
 
     // Main loop that continues until the window is closed
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
+            sliderMenu.handleEvent(event, window);
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        float deltaTime = clock.restart().asSeconds(); // Get time elapsed since last frame
-        move(circle, window, SPEED*deltaTime);
 
-        // Clear the window
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            float sx = sensor.getPosition().x + sensor.getRadius()/2;
+            float sy = sensor.getPosition().y + sensor.getRadius()/2;
+
+            // Calculate the direction of the projectile
+            float dx = sf::Mouse::getPosition(window).x - sx;
+            float dy = sf::Mouse::getPosition(window).y - sy;
+
+            // Normalize the direction
+            float length = std::sqrt(dx * dx + dy * dy);
+            dx /= length / SPEED;
+            dy /= length / SPEED;
+
+            projectiles.emplace_back(sx, sy, dx, dy);
+        }
+
+        float deltaTime = clock.restart().asSeconds();
+        sensor.update(window, deltaTime);
+        for (auto& projectile : projectiles) {
+            projectile.update(deltaTime);
+        }
+        sliderMenu.update(window);
+
         window.clear();
-
-        // Draw the circle
-        window.draw(circle);
-
-        // Display the contents of the window
+        window.draw(sensor);
+        for (const auto& projectile : projectiles) {
+            window.draw(projectile);
+        }
+        sliderMenu.draw(window);
         window.display();
     }
 

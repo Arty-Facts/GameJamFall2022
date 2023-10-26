@@ -1,4 +1,4 @@
-project(gamejam-fall-2022)
+project(ray-2023)
 
 cmake_minimum_required(VERSION 3.16)
 
@@ -11,22 +11,22 @@ include(FetchContent)
 
 set(BUILD_SHARED_LIBS OFF)
 FetchContent_Declare(
- SFML
- GIT_REPOSITORY https://github.com/SFML/SFML.git
- GIT_TAG 2.5.1
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.5.1
 )
 FetchContent_MakeAvailable(SFML)
 
 set(BUILD_SHARED_LIBS OFF)
 FetchContent_Declare(
- box2d
- GIT_REPOSITORY https://github.com/erincatto/box2d.git
- GIT_TAG v2.4.1
-)
+    box2d
+    GIT_REPOSITORY https://github.com/erincatto/box2d.git
+    GIT_TAG v2.4.1
+    )
 FetchContent_MakeAvailable(box2d)
+
 set(SOURCES 
     ray/main.cpp 
-
 )
 
 add_executable(ray ${SOURCES})
@@ -46,3 +46,8 @@ add_custom_command(TARGET ray POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${PROJECT_SOURCE_DIR}/ray/assets"
             $<TARGET_FILE_DIR:ray>/assets)
+
+add_custom_command(TARGET ray POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${PROJECT_SOURCE_DIR}/ray/resources"
+                $<TARGET_FILE_DIR:ray>/resources)
