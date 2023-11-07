@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package game;
+
+// The position message now includes an identifier for the blob
+message Position {
+  string id = 1;
+  int32 x = 2;
+  int32 y = 3;
+}
+
+// A message to handle the connection of a new player
+message JoinGameRequest {
+  string playerName = 1;
+}
+
+message JoinGameResponse {
+  string playerId = 1;
+  repeated Position otherPlayers = 2;
+}
+
+// The game service definition now includes methods for joining and receiving updates
+service GameService {
+  rpc JoinGame(JoinGameRequest) returns (JoinGameResponse) {}
+  rpc UpdatePosition(Position) returns (Position) {}
+  rpc GetPositions(stream Position) returns (stream Position) {}
+}
